@@ -1,15 +1,19 @@
 <template>
   <g>
     <rect :height="height" :width="width" />
-    <g v-for="octave in octaves" :key="octave">
+    <g v-for="(octave, octaveIndex) in octaves" :key="'white-' + octave.value">
       <g class="white-keys">
-        <Key v-for="key in whiteKeys" :key="key"
-          classname="white" :width="width" :y="key * 30 + octave * octaveHeight" />
+        <Key v-for="key in keys" :key="key.y"
+          classname="white" :width="width" :height="key.height"
+          :y="key.y + octaveIndex * constant.OCTAVE_HEIGHT" />
       </g>
+    </g>
+    <g v-for="(octave, octaveIndex) in octaves" :key="'black-' + octave.value">
       <g class="black-keys">
-        <Key v-for="key in blackKeys" :key="key"
-          v-if="key % 7 !== 3 && key % 7 !== 6"
-          classname="black" :width="width" :y="key * 30 + 20 + octave * octaveHeight" />
+        <Key v-for="(key, index) in keys" :key="key.y"
+          v-if="index % 7 !== 3 && index % 7 !== 6"
+          classname="black" :width="width" :height="constant.BLACK_KEY_HEIGHT"
+          :y="key.y + key.height - 10 + octaveIndex * constant.OCTAVE_HEIGHT" />
       </g>
     </g>
   </g>
@@ -17,23 +21,27 @@
 
 <script>
 import Key from './Key';
+import constant from '@/constants/constant';
 
 export default {
   data () {
     return {
-      octaves: [0, 1, 2],
-      whiteKeys: [0, 1, 2, 3, 4, 5, 6],
-      blackKeys: [0, 1, 2, 3, 4, 5, 6]
+      keys: [],
+      constant
     };
   },
-  props: ['height', 'width'],
+  props: ['height', 'width', 'octaves'],
   components: {
     Key
   },
-  computed: {
-    octaveHeight () {
-      return 30 * 7;
-    }
+  mounted () {
+    this.keys = constant.WHITE_KEYS_HEIGHT
+      .map((value, index) => {
+        return {
+          height: value,
+          y: constant.WHITE_KEYS_Y[index]
+        };
+      });
   }
 };
 </script>

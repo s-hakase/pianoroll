@@ -11,11 +11,15 @@
           <stop offset="90%" stop-color="#5b5d5f" />
         </linearGradient>
       </defs>
-      <Preview :height="height" :width="previewWidth" />
+      <Preview
+        :height="height"
+        :width="previewWidth"
+        :octaves="octaves" />
       <PianoRoll
         :height="height"
         :width="width - previewWidth"
-        :offsetX="previewWidth"/>
+        :offsetX="previewWidth"
+        :octaves="octaves" />
     </svg>
   </div>
 </template>
@@ -30,7 +34,14 @@ export default {
     return {
       height: 300,
       width: 300,
-      previewWidth: 120
+      previewWidth: 120,
+      octaves: [{
+        value: 6
+      }, {
+        value: 5
+      }, {
+        value: 4
+      }]
     };
   },
   components: {
@@ -46,18 +57,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

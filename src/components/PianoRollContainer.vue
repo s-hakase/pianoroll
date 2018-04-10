@@ -11,14 +11,14 @@
           <stop offset="90%" stop-color="#5b5d5f" />
         </linearGradient>
       </defs>
-      <Preview
-        :height="height"
-        :width="previewWidth"
-        :octaves="octaves" />
       <PianoRoll
         :height="height"
         :width="width - previewWidth"
         :offsetX="previewWidth"
+        :octaves="octaves" />
+      <Preview
+        :height="height"
+        :width="previewWidth"
         :octaves="octaves" />
     </svg>
   </div>

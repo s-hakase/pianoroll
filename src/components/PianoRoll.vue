@@ -1,10 +1,36 @@
 <template>
-  <rect :height="height" :width="width" :x="offsetX" />
+  <g>
+    <rect :height="height" :width="width" :x="offsetX" />
+    <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex">
+      <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
+        :key="`${octaveIndex}-${index}`"
+        :classname="key === 0 ? 'white' : 'black'"
+        :width="width" :height="constant.LINE_HEIGHT"
+        :x="offsetX"
+        :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
+    </g>
+  </g>
 </template>
 
 <script>
+import PianoRollLine from './PianoRollLine';
+import constant from '@/constants/constant';
+
 export default {
-  props: ['height', 'width', 'offsetX']
+  props: ['height', 'width', 'offsetX', 'octaves'],
+  data () {
+    return {
+      constant
+    };
+  },
+  components: {
+    PianoRollLine
+  },
+  computed: {
+    octaveHeight () {
+      return constant.LINE_HEIGHT * 12;
+    }
+  }
 };
 </script>
 

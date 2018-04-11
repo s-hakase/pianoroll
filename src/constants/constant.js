@@ -14,7 +14,8 @@ const Constant = {
     return prev + current;
   }, 0),
   BLACK_KEY_HEIGHT: 20,
-  LINE_HEIGHT: 20
+  LINE_HEIGHT: 20,
+  X_AXIS_INTERVAL: 17
 };
 
 export default Constant;

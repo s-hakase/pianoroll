@@ -9,11 +9,13 @@
         :x="offsetX"
         :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
     </g>
+    <XAxis :height="height" :width="width" :x="offsetX" />
   </g>
 </template>
 
 <script>
 import PianoRollLine from './PianoRollLine';
+import XAxis from './XAxis';
 import constant from '@/constants/constant';
 
 export default {
@@ -24,7 +26,8 @@ export default {
     };
   },
   components: {
-    PianoRollLine
+    PianoRollLine,
+    XAxis
   },
   computed: {
     octaveHeight () {

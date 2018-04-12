@@ -1,5 +1,5 @@
 <template>
-  <div class="pianoroll">
+  <div id="PianoRoll">
     <svg :height="height" :width="width">
       <defs>
         <linearGradient id="WhiteKeyGradient">
@@ -55,6 +55,8 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
+#PianoRoll {
+  margin-top: 56px;
+}
 </style>

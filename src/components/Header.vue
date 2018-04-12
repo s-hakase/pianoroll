@@ -1,13 +1,21 @@
 <template>
   <div id="Header">
-    <header class="">
+    <header class="header">
       <!-- Contents -->
+      <span>{{KeyStore.currentKey}}{{KeyStore.currentOctave}}</span>
     </header>
   </div>
 </template>
 
 <script>
+import KeyStore from '@/stores/KeyStore';
+
 export default {
+  data () {
+    return {
+      KeyStore: KeyStore.data
+    };
+  }
 };
 </script>
 
@@ -20,5 +28,8 @@ export default {
 
   /* temp */
   height: 56px;
+}
+.header {
+  color: #EFF7FB;
 }
 </style>

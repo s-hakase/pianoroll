@@ -2,6 +2,7 @@ const WHITE_KEYS_HEIGHT = [
   30, 40, 40, 30, 30, 40, 30
 ];
 const Constant = {
+  KEY_NAMES: ['B', 'A#', 'A', 'G#', 'G', 'F#', 'F', 'E', 'D#', 'D', 'C#', 'C'],
   OCTAVE_KEYS: [0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
   WHITE_KEYS_HEIGHT,
   WHITE_KEYS_Y:

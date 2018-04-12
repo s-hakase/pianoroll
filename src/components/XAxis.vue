@@ -47,6 +47,7 @@ line {
   stroke: #2D4B57;
   stroke-width: 1px;
   opacity: 0.5;
+  pointer-events: none;
 }
 .measure {
   stroke: #23424E;

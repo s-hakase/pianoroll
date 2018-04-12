@@ -1,10 +1,13 @@
 <template>
   <g>
     <rect :height="height" :width="width" :x="offsetX" />
-    <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex">
+    <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex"
+      @mouseover="setCurrentOctave(octave.value)"
+      @mouseout="setCurrentOctave('')">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
         :classname="key === 0 ? 'white' : 'black'"
+        :keyname="constant.KEY_NAMES[index]"
         :width="width" :height="constant.LINE_HEIGHT"
         :x="offsetX"
         :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
@@ -17,6 +20,7 @@
 import PianoRollLine from './PianoRollLine';
 import XAxis from './XAxis';
 import constant from '@/constants/constant';
+import KeyStore from '@/stores/KeyStore';
 
 export default {
   props: ['height', 'width', 'offsetX', 'octaves'],
@@ -32,6 +36,11 @@ export default {
   computed: {
     octaveHeight () {
       return constant.LINE_HEIGHT * 12;
+    }
+  },
+  methods: {
+    setCurrentOctave (octave) {
+      KeyStore.methods.setCurrentOctave(octave);
     }
   }
 };

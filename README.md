@@ -2,6 +2,12 @@
 
 It is a piano role editor application that I am making as an exercise of application creation using Vue.js.
 
+## Requirement
+need to download following files and place them in `static` directory.
+
+- [pico.min.js](https://github.com/mohayonao/pico.js)
+- [sionic.js](https://github.com/minipop/sionicjs)
+
 ## Build Setup
 
 ``` bash

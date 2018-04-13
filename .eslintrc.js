@@ -27,5 +27,9 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // 
     semi: ["error", "always"]
+  },
+  globals: {
+    'Pico': false,
+    'Sionic': false
   }
 }

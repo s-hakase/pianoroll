@@ -3,7 +3,10 @@
     <rect :height="height" :width="width" :x="offsetX" />
     <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex"
       @mouseover="setCurrentOctave(octave.value)"
-      @mouseout="setCurrentOctave('')">
+      @mouseout="setCurrentOctave('');play()"
+      @mousedown="play"
+      @mouseup="play"
+      @mousemove="play">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
         :classname="key === 0 ? 'white' : 'black'"
@@ -21,6 +24,9 @@ import PianoRollLine from './PianoRollLine';
 import XAxis from './XAxis';
 import constant from '@/constants/constant';
 import KeyStore from '@/stores/KeyStore';
+
+Pico.pause();
+let latestKey = '';
 
 export default {
   props: ['height', 'width', 'offsetX', 'octaves'],
@@ -41,6 +47,30 @@ export default {
   methods: {
     setCurrentOctave (octave) {
       KeyStore.methods.setCurrentOctave(octave);
+    },
+    play (e) {
+      if (!Pico || !Sionic) {
+        return;
+      }
+      e && console.info(e.buttons);
+      if (!e || e.buttons === 0 ||
+        !KeyStore.data.currentOctave || !KeyStore.data.currentKey) {
+        this.pause();
+        return;
+      }
+      let key = KeyStore.data.currentKey.toLowerCase();
+      let octave = KeyStore.data.currentOctave;
+      let mml = `t1;o${octave}${key.split('#').join('+')}`;
+      if (latestKey === mml) {
+        return;
+      }
+      this.pause();
+      Pico.play(Sionic(mml));
+      latestKey = mml;
+    },
+    pause () {
+      Pico.pause();
+      latestKey = '';
     }
   }
 };

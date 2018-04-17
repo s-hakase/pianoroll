@@ -5,7 +5,7 @@
       @mouseover="setCurrentOctave(octave.value)"
       @mouseout="setCurrentOctave('');play($event)"
       @mousedown="play"
-      @mouseup="play"
+      @mouseup="addNote();play($event)"
       @mousemove="play($event);updateMousePositionAtPianoRoll($event)">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
@@ -16,7 +16,10 @@
         :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
     </g>
     <XAxis :height="height" :width="width" :x="offsetX" />
-    <Note :x="KeyStore.currentSnappedPosition[0]"
+    <Note v-for="note in KeyStore.notes" :key="note.num"
+      :x="note.x" :y="note.y" :width="note.width" :keyname="note.keyname" />
+    <Note v-if="clicked === 1"
+      :x="KeyStore.currentSnappedPosition[0]"
       :y="KeyStore.currentSnappedPosition[1]"
       :width="KeyStore.selectedSnap * constant.X_AXIS_INTERVAL"
       :keyname="KeyStore.currentKey + KeyStore.currentOctave" />
@@ -38,7 +41,8 @@ export default {
   data () {
     return {
       constant,
-      KeyStore: KeyStore.data
+      KeyStore: KeyStore.data,
+      clicked: 0
     };
   },
   components: {
@@ -56,6 +60,7 @@ export default {
       KeyStore.methods.setCurrentOctave(octave);
     },
     play (e) {
+      this.clicked = e.buttons;
       if (!Pico || !Sionic) {
         return;
       }
@@ -82,6 +87,17 @@ export default {
       let x = e.offsetX;
       let y = e.offsetY;
       KeyStore.methods.setCurrentSnappedPosition([x, y]);
+    },
+    addNote () {
+      if (this.clicked === 1) {
+        KeyStore.methods.addNote({
+          num: Math.random(),
+          x: KeyStore.data.currentSnappedPosition[0],
+          y: KeyStore.data.currentSnappedPosition[1],
+          width: KeyStore.data.selectedSnap * constant.X_AXIS_INTERVAL,
+          keyname: KeyStore.data.currentKey + KeyStore.data.currentOctave
+        });
+      }
     }
   }
 };

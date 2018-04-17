@@ -1,13 +1,21 @@
 <template>
   <g>
     <rect :x="x" :y="y" rx="2" ry="2" :width="width" height="20" />
-    <text :x="x*1 + 2" :y="y*1 + 15" >{{keyname}}</text>
+    <text :x="textX" :y="textY" >{{keyname}}</text>
   </g>
 </template>
 
 <script>
 export default {
-  props: [ 'x', 'y', 'width', 'keyname' ]
+  props: [ 'x', 'y', 'width', 'keyname' ],
+  computed: {
+    textX () {
+      return this.x + 2;
+    },
+    textY () {
+      return this.y + 15;
+    }
+  }
 };
 </script>
 

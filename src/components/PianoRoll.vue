@@ -3,10 +3,10 @@
     <rect :height="height" :width="width" :x="offsetX" />
     <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex"
       @mouseover="setCurrentOctave(octave.value)"
-      @mouseout="setCurrentOctave('');play()"
+      @mouseout="setCurrentOctave('');play($event)"
       @mousedown="play"
       @mouseup="play"
-      @mousemove="play">
+      @mousemove="play($event);updateMousePositionAtPianoRoll($event)">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
         :classname="key === 0 ? 'white' : 'black'"
@@ -16,12 +16,17 @@
         :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
     </g>
     <XAxis :height="height" :width="width" :x="offsetX" />
+    <Note :x="KeyStore.currentSnappedPosition[0]"
+      :y="KeyStore.currentSnappedPosition[1]"
+      :width="KeyStore.selectedSnap * constant.X_AXIS_INTERVAL"
+      :keyname="KeyStore.currentKey + KeyStore.currentOctave" />
   </g>
 </template>
 
 <script>
 import PianoRollLine from './PianoRollLine';
 import XAxis from './XAxis';
+import Note from './Note';
 import constant from '@/constants/constant';
 import KeyStore from '@/stores/KeyStore';
 
@@ -32,12 +37,14 @@ export default {
   props: ['height', 'width', 'offsetX', 'octaves'],
   data () {
     return {
-      constant
+      constant,
+      KeyStore: KeyStore.data
     };
   },
   components: {
     PianoRollLine,
-    XAxis
+    XAxis,
+    Note
   },
   computed: {
     octaveHeight () {
@@ -52,8 +59,7 @@ export default {
       if (!Pico || !Sionic) {
         return;
       }
-      e && console.info(e.buttons);
-      if (!e || e.buttons === 0 ||
+      if (!e || e.buttons === 0 || e.type === 'mouseout' ||
         !KeyStore.data.currentOctave || !KeyStore.data.currentKey) {
         this.pause();
         return;
@@ -71,6 +77,11 @@ export default {
     pause () {
       Pico.pause();
       latestKey = '';
+    },
+    updateMousePositionAtPianoRoll (e) {
+      let x = e.offsetX;
+      let y = e.offsetY;
+      KeyStore.methods.setCurrentSnappedPosition([x, y]);
     }
   }
 };

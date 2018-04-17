@@ -1,7 +1,11 @@
+import constant from '@/constants/constant';
+
 const KeyStore = {
   data: {
     currentKey: '',
-    currentOctave: ''
+    currentOctave: '',
+    currentSnappedPosition: [-9999, -9999],
+    selectedSnap: 4
   },
   methods: {
     setCurrentKey (keyname) {
@@ -9,6 +13,12 @@ const KeyStore = {
     },
     setCurrentOctave (octave) {
       KeyStore.data.currentOctave = octave;
+    },
+    setCurrentSnappedPosition (pos) {
+      KeyStore.data.currentSnappedPosition = [
+        pos[0] - (pos[0] % (KeyStore.data.selectedSnap * constant.X_AXIS_INTERVAL)),
+        pos[1] - (pos[1] % constant.LINE_HEIGHT)
+      ];
     }
   }
 };

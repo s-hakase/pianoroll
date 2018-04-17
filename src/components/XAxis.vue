@@ -32,7 +32,7 @@ export default {
     width (val) {
       this.axes = (() => {
         let axes = [];
-        for (let x = 12; x < val; x += constant.X_AXIS_INTERVAL) {
+        for (let x = constant.X_AXIS_OFFSET; x < val; x += constant.X_AXIS_INTERVAL) {
           axes.push(x);
         }
         return axes;

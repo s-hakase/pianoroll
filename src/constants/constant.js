@@ -17,7 +17,15 @@ const Constant = {
   }, 0),
   BLACK_KEY_HEIGHT: 20,
   LINE_HEIGHT: 20,
-  X_AXIS_INTERVAL: 17
+  X_AXIS_INTERVAL: 16,
+  X_AXIS_OFFSET: 8,
+  SELECTS_SNAP: [
+    { label: '1/4 Step', value: 0.25 }, // 64th notes
+    { label: '1/2 Step', value: 0.5 }, // 32nd notes
+    { label: '1/4 Beat', value: 1 }, // 16th notes
+    { label: '1/2 Beat', value: 2 }, // 8th notes
+    { label: '1 Beat', value: 4, default: 'true' } // Quarter notes
+  ]
 };
 
 export default Constant;

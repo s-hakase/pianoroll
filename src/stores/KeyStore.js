@@ -5,7 +5,8 @@ const KeyStore = {
     currentKey: '',
     currentOctave: '',
     currentSnappedPosition: [-9999, -9999],
-    selectedSnap: 4
+    selectedSnap: 4,
+    notes: []
   },
   methods: {
     setCurrentKey (keyname) {
@@ -19,6 +20,9 @@ const KeyStore = {
         pos[0] - (pos[0] % (KeyStore.data.selectedSnap * constant.X_AXIS_INTERVAL)),
         pos[1] - (pos[1] % constant.LINE_HEIGHT)
       ];
+    },
+    addNote (note) {
+      KeyStore.data.notes.push(note);
     }
   }
 };

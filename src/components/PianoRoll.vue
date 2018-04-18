@@ -16,13 +16,15 @@
         :y="index * constant.LINE_HEIGHT + octaveIndex * octaveHeight"/>
     </g>
     <XAxis :height="height" :width="width" :x="offsetX" />
-    <Note v-for="note in KeyStore.notes" :key="note.num"
-      :x="note.x" :y="note.y" :width="note.width" :keyname="note.keyname" />
-    <Note v-if="clicked === 1"
+    <Note v-for="note in KeyStore.notes" :key="note.id"
+      :x="note.x" :y="note.y" :width="note.width" :keyname="note.keyname"
+      :selected="note.selected" :id="note.id" />
+    <Note v-if="clicked === 1" class="pointer-none"
       :x="KeyStore.currentSnappedPosition[0]"
       :y="KeyStore.currentSnappedPosition[1]"
       :width="KeyStore.selectedSnap * constant.X_AXIS_INTERVAL"
-      :keyname="KeyStore.currentKey + KeyStore.currentOctave" />
+      :keyname="KeyStore.currentKey + KeyStore.currentOctave"
+      :selected="false" />
   </g>
 </template>
 
@@ -91,11 +93,11 @@ export default {
     addNote () {
       if (this.clicked === 1) {
         KeyStore.methods.addNote({
-          num: Math.random(),
           x: KeyStore.data.currentSnappedPosition[0],
           y: KeyStore.data.currentSnappedPosition[1],
           width: KeyStore.data.selectedSnap * constant.X_AXIS_INTERVAL,
-          keyname: KeyStore.data.currentKey + KeyStore.data.currentOctave
+          keyname: KeyStore.data.currentKey + KeyStore.data.currentOctave,
+          selected: false
         });
       }
     }
@@ -106,5 +108,8 @@ export default {
 <style scoped>
 rect {
   fill: #36535F;
+}
+.pointer-none {
+  pointer-events: none;
 }
 </style>

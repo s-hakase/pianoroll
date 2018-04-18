@@ -1,6 +1,7 @@
 <template>
   <div id="PianoRoll">
-    <svg :height="height" :width="width">
+    <svg :height="height" :width="width"
+      @contextmenu="$event.preventDefault()">
       <defs>
         <linearGradient id="WhiteKeyGradient">
           <stop offset="5%" stop-color="#dbe2e9" />
@@ -58,5 +59,6 @@ export default {
 <style>
 #PianoRoll {
   margin-top: 56px;
+  user-select: none;
 }
 </style>

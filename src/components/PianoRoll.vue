@@ -3,9 +3,9 @@
     <rect :height="height" :width="width" :x="offsetX" />
     <g v-for="(octave, octaveIndex) in octaves" :key="octaveIndex"
       @mouseover="setCurrentOctave(octave.value)"
-      @mouseout="setCurrentOctave('');play($event)"
-      @mousedown="play"
-      @mouseup="addNote();play($event)"
+      @mouseout="updateMouseStatus($event);setCurrentOctave('');play($event)"
+      @mousedown="updateMouseStatus($event);play($event)"
+      @mouseup="addNote();updateMouseStatus($event);play($event)"
       @mousemove="play($event);updateMousePositionAtPianoRoll($event)">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
@@ -19,7 +19,7 @@
     <Note v-for="note in KeyStore.notes" :key="note.id"
       :x="note.x" :y="note.y" :width="note.width" :keyname="note.keyname"
       :selected="note.selected" :id="note.id" />
-    <Note v-if="clicked === 1" class="pointer-none"
+    <Note v-if="KeyStore.clicked === 1" class="pointer-none"
       :x="KeyStore.currentSnappedPosition[0]"
       :y="KeyStore.currentSnappedPosition[1]"
       :width="KeyStore.selectedSnap * constant.X_AXIS_INTERVAL"
@@ -43,8 +43,7 @@ export default {
   data () {
     return {
       constant,
-      KeyStore: KeyStore.data,
-      clicked: 0
+      KeyStore: KeyStore.data
     };
   },
   components: {
@@ -62,11 +61,10 @@ export default {
       KeyStore.methods.setCurrentOctave(octave);
     },
     play (e) {
-      this.clicked = e.buttons;
       if (!Pico || !Sionic) {
         return;
       }
-      if (!e || e.buttons === 0 || e.type === 'mouseout' ||
+      if (!e || e.buttons !== 1 || e.type === 'mouseout' ||
         !KeyStore.data.currentOctave || !KeyStore.data.currentKey) {
         this.pause();
         return;
@@ -90,8 +88,12 @@ export default {
       let y = e.offsetY;
       KeyStore.methods.setCurrentSnappedPosition([x, y]);
     },
+    updateMouseStatus (e) {
+      KeyStore.data.clicked = e.buttons;
+      e.preventDefault();
+    },
     addNote () {
-      if (this.clicked === 1) {
+      if (KeyStore.data.clicked === 1) {
         KeyStore.methods.addNote({
           x: KeyStore.data.currentSnappedPosition[0],
           y: KeyStore.data.currentSnappedPosition[1],

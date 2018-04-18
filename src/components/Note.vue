@@ -2,7 +2,10 @@
   <g :class="{selected:selected}">
     <rect :x="x" :y="y" rx="2" ry="2" :width="width" height="20"
       @mouseover="setCurrentKeyAndOctave(keyname)"
-      @mouseout="setCurrentKeyAndOctave('')"
+      @mouseout="setCurrentKeyAndOctave('');updateMouseStatus($event)"
+      @mousemove="updateMousePositionAtPianoRoll($event);remove($event)"
+      @mousedown="updateMouseStatus($event);remove($event)"
+      @mouseup="updateMouseStatus($event)"
       @click="select"/>
     <text :x="textX" :y="textY" >{{keyname}}</text>
   </g>
@@ -27,6 +30,19 @@ export default {
     },
     select () {
       KeyStore.methods.selectNoteByIds([this.id]);
+    },
+    remove (e) {
+      if (KeyStore.data.clicked === 2) {
+        KeyStore.methods.removeNote([this.id]);
+      }
+    },
+    updateMouseStatus (e) {
+      KeyStore.data.clicked = e.buttons;
+    },
+    updateMousePositionAtPianoRoll (e) {
+      let x = e.offsetX;
+      let y = e.offsetY;
+      KeyStore.methods.setCurrentSnappedPosition([x, y]);
     }
   }
 };

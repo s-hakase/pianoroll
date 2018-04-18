@@ -7,7 +7,8 @@ const KeyStore = {
     currentOctave: '',
     currentSnappedPosition: [-9999, -9999],
     selectedSnap: 4,
-    notes: []
+    notes: [],
+    clicked: 0
   },
   methods: {
     setCurrentKey (keyname) {
@@ -36,6 +37,7 @@ const KeyStore = {
       note.id = 'note-' + count;
       KeyStore.data.notes.push(note);
       count++;
+      this.selectNoteByIds([]);
     },
     selectNoteByIds (ids) {
       KeyStore.data.notes.forEach((note) => {
@@ -43,6 +45,14 @@ const KeyStore = {
           return note.id === id;
         });
         note.selected = index > -1;
+      });
+    },
+    removeNote (ids) {
+      KeyStore.data.notes = KeyStore.data.notes.filter((note) => {
+        let index = ids.findIndex((id) => {
+          return note.id === id;
+        });
+        return index === -1;
       });
     }
   }

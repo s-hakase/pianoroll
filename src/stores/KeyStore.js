@@ -7,8 +7,10 @@ const KeyStore = {
     currentOctave: '',
     currentSnappedPosition: [-9999, -9999],
     selectedSnap: 4,
+    latestWidth: 4,
     notes: [],
-    clicked: 0
+    clicked: 0,
+    dragging: false
   },
   methods: {
     setCurrentKey (keyname) {
@@ -54,6 +56,20 @@ const KeyStore = {
         });
         return index === -1;
       });
+    },
+    setLatestWidth (width) {
+      KeyStore.data.latestWidth = width;
+    },
+    getNotes (ids) {
+      return KeyStore.data.notes.filter((note) => {
+        let index = ids.findIndex((id) => {
+          return note.id === id;
+        });
+        return index > -1;
+      });
+    },
+    setDragging (val) {
+      KeyStore.data.dragging = val;
     }
   }
 };

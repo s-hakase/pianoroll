@@ -7,6 +7,7 @@
           :value="opt.value" :selected="!!opt.default">{{opt.label}}</option>
       </select>
       <span>{{KeyStore.currentKey}}{{KeyStore.currentOctave}}</span>
+      <span>{{KeyStore.currentSnappedPosition}}</span>
     </header>
   </div>
 </template>

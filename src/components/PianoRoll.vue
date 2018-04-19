@@ -6,7 +6,7 @@
       @mouseout="updateMouseStatus($event);setCurrentOctave('');play($event)"
       @mousedown="updateMouseStatus($event);play($event)"
       @mouseup="addNote();updateMouseStatus($event);play($event)"
-      @mousemove="play($event);updateMousePositionAtPianoRoll($event)">
+      @mousemove="play($event);updateMousePositionAtPianoRoll($event);changeWidth($event)">
       <PianoRollLine v-for="(key, index) in constant.OCTAVE_KEYS"
         :key="`${octaveIndex}-${index}`"
         :classname="key === 0 ? 'white' : 'black'"
@@ -18,13 +18,14 @@
     <XAxis :height="height" :width="width" :x="offsetX" />
     <Note v-for="note in KeyStore.notes" :key="note.id"
       :x="note.x" :y="note.y" :width="note.width" :keyname="note.keyname"
-      :selected="note.selected" :id="note.id" />
-    <Note v-if="KeyStore.clicked === 1" class="pointer-none"
+      :selected="note.selected" :id="note.id" :editable="true"
+      @dragstart="startDrag" />
+    <Note v-if="!KeyStore.dragging && KeyStore.clicked === 1" class="pointer-none"
       :x="KeyStore.currentSnappedPosition[0]"
       :y="KeyStore.currentSnappedPosition[1]"
-      :width="KeyStore.selectedSnap * constant.X_AXIS_INTERVAL"
+      :width="KeyStore.latestWidth"
       :keyname="KeyStore.currentKey + KeyStore.currentOctave"
-      :selected="false" />
+      :selected="false" :editable="false" />
   </g>
 </template>
 
@@ -37,13 +38,17 @@ import KeyStore from '@/stores/KeyStore';
 
 Pico.pause();
 let latestKey = '';
+let targetNote = null;
+let startX = -9999;
+let beforeWidth = -9999;
 
 export default {
   props: ['height', 'width', 'offsetX', 'octaves'],
   data () {
     return {
       constant,
-      KeyStore: KeyStore.data
+      KeyStore: KeyStore.data,
+      dragging: false
     };
   },
   components: {
@@ -65,7 +70,8 @@ export default {
         return;
       }
       if (!e || e.buttons !== 1 || e.type === 'mouseout' ||
-        !KeyStore.data.currentOctave || !KeyStore.data.currentKey) {
+        !KeyStore.data.currentOctave || !KeyStore.data.currentKey ||
+        KeyStore.data.dragging) {
         this.pause();
         return;
       }
@@ -90,17 +96,37 @@ export default {
     },
     updateMouseStatus (e) {
       KeyStore.data.clicked = e.buttons;
+      if (KeyStore.data.clicked !== 1) {
+        KeyStore.methods.setDragging(false);
+      }
       e.preventDefault();
     },
     addNote () {
-      if (KeyStore.data.clicked === 1) {
+      if (!KeyStore.data.dragging && KeyStore.data.clicked === 1) {
         KeyStore.methods.addNote({
           x: KeyStore.data.currentSnappedPosition[0],
           y: KeyStore.data.currentSnappedPosition[1],
-          width: KeyStore.data.selectedSnap * constant.X_AXIS_INTERVAL,
+          width: KeyStore.data.latestWidth,
           keyname: KeyStore.data.currentKey + KeyStore.data.currentOctave,
           selected: false
         });
+      }
+    },
+    startDrag (noteId) {
+      KeyStore.methods.setDragging(true);
+      targetNote = KeyStore.methods.getNotes([noteId])[0];
+      beforeWidth = targetNote.width;
+      startX = KeyStore.data.currentSnappedPosition[0];
+    },
+    changeWidth (e) {
+      if (KeyStore.data.dragging) {
+        const delta = (KeyStore.data.currentSnappedPosition[0] - startX) /
+          this.constant.X_AXIS_INTERVAL;
+        targetNote.width =
+          Math.max(
+            beforeWidth + delta - KeyStore.data.selectedSnap,
+            KeyStore.data.selectedSnap);
+        KeyStore.methods.setLatestWidth(targetNote.width);
       }
     }
   }

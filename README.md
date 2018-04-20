@@ -23,3 +23,16 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+
+## Demo
+
+https://s-hakase.github.io/pianoroll/
+
+### How to use
+- Left-click to add a note
+- Right-click a note to delete it
+- Hold the Left-click on the right side of the note and drag to change length of it
+- Select option on the header to change snap setting
+
+### Cannot yet
+- Play / Pause
